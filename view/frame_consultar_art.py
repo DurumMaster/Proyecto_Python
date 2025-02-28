@@ -71,11 +71,16 @@ class FrameConArt(ttk.Frame):
 
     
     def modify(self):
-        articulo = self.tree.selection()
-        if len(articulo) == 0:
-            messagebox.askokcancel("Error", "No has seleccionado ningún artículo")
-        else:
-            pass
+
+        item = self.tree.selection()
+        if not item:
+            messagebox.showerror("Error", "Por favor, selecciona un artículo para modificar.")
+            return
+
+        datos = self.tree.item(item, "values")
+        codigo = datos[0] 
+
+        self.controlador.show_modify(codigo)
 
 
     def delete(self):

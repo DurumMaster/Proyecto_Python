@@ -34,9 +34,12 @@ class DBArticulos:
 
             con.commit()
 
+            return False
+
         except Exception as e:
             print("Error al insertar articulo")
             print(e)
+            return True
         finally:
             if cur != None:
                 cur.close()
@@ -169,8 +172,11 @@ class DBArticulos:
 
             con.commit()
 
+            return True
+
         except Exception :
             print("Error al actualizar el de articulo")
+            return False
         finally:
             if cur != None:
                 cur.close()
