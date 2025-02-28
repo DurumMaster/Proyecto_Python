@@ -21,7 +21,7 @@ class DBArticulos:
         self.con = ConDB()
 
 
-    def insertArt(self, articulo):
+    def insert_art(self, articulo):
         con = None
         cur = None
         try:
@@ -43,7 +43,7 @@ class DBArticulos:
                 con.close()
 
 
-    def getAllArt(self):
+    def get_all_art(self):
         con = None
         cur = None
         art_list = []
@@ -55,11 +55,11 @@ class DBArticulos:
             
             continuar = True
             while continuar:
-                reg = cur.fetchone
+                reg = cur.fetchone()
                 if reg == None:
                     continuar = False
                 else:
-                    art_list.append(Articulo())
+                    art_list.append(Articulo(reg.cod_articulo, reg.nombre, reg.descripcion, reg.precio, reg.disponible))
 
 
         except Exception :
@@ -71,8 +71,10 @@ class DBArticulos:
             if con != None:
                 con.close()
 
+        return art_list
 
-    def getArtByID(self, id):
+
+    def get_art_by_id(self, id):
         con = None
         cur = None
         art_list = []
@@ -88,7 +90,7 @@ class DBArticulos:
                 if reg == None:
                     continuar = False
                 else:
-                    art_list.append(Articulo())
+                    art_list.append(Articulo(reg.cod_articulo, reg.nombre, reg.descripcion, reg.precio, reg.disponible))
 
 
         except Exception :
@@ -103,7 +105,7 @@ class DBArticulos:
         return art_list
     
 
-    def getArtByNombre(self, nombre):
+    def get_art_by_name(self, nombre):
         con = None
         cur = None
         art_list = []
@@ -119,7 +121,7 @@ class DBArticulos:
                 if reg == None:
                     continuar = False
                 else:
-                    art_list.append(Articulo())
+                    art_list.append(Articulo(reg.cod_articulo, reg.nombre, reg.descripcion, reg.precio, reg.disponible))
 
         except Exception :
             print("Error al consultar articulos por nombre")
@@ -133,7 +135,7 @@ class DBArticulos:
         return art_list
     
 
-    def updateDelete(self,id):
+    def update_delete(self,id):
         con = None
         cur = None
         try:
@@ -154,7 +156,7 @@ class DBArticulos:
                 con.close()
 
     
-    def updateArt(self, art):
+    def update_art(self, art):
         con = None
         cur = None
         try:

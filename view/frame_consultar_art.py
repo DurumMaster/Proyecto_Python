@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 from tkinter import ttk
 
 class FrameConArt(ttk.Frame):
@@ -24,7 +25,7 @@ class FrameConArt(ttk.Frame):
         self.entry_nombre.grid(row=2, column=1, padx=5, pady=2, sticky=W)
 
         # Botón de búsqueda
-        self.btn_buscar = ttk.Button(self, text="BUSCAR")
+        self.btn_buscar = ttk.Button(self, text="BUSCAR", command=self.select)
         self.btn_buscar.grid(row=3, column=1, pady=5, sticky=E)
 
         # Frame para la tabla y scrollbar
@@ -38,6 +39,7 @@ class FrameConArt(ttk.Frame):
         self.tree = ttk.Treeview(
             self.frame_tabla, 
             columns=("Código", "Nombre"), 
+            selectmode="browse",
             show="headings", 
             height=5, 
             yscrollcommand=self.scroll_y.set
@@ -57,15 +59,56 @@ class FrameConArt(ttk.Frame):
         self.frame_botones = ttk.Frame(self)
         self.frame_botones.grid(row=5, column=0, columnspan=2, pady=10)
 
-        self.btn_modificar = ttk.Button(self.frame_botones, text="MODIFICAR")
+        self.btn_modificar = ttk.Button(self.frame_botones, text="MODIFICAR", command=self.modify)
         self.btn_modificar.grid(row=0, column=0, padx=5)
 
-        self.btn_eliminar = ttk.Button(self.frame_botones, text="ELIMINAR")
+        self.btn_eliminar = ttk.Button(self.frame_botones, text="ELIMINAR", command=self.delete)
         self.btn_eliminar.grid(row=0, column=1, padx=5)
 
         # Ajustar tamaño de columnas
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
+
+    
+    def modify(self):
+        articulo = self.tree.selection()
+        if len(articulo) == 0:
+            messagebox.askokcancel("Error", "No has seleccionado ningún artículo")
+        else:
+            pass
+
+
+    def delete(self):
+        articulo = self.tree.selection()
+        if len(articulo) == 0:
+            messagebox.askokcancel("Error", "No has seleccionado ningún artículo")
+        else:
+            respuesta = messagebox.askquestion("Eliminar artículo", "¿Estás seguro de que quieres eliminar el producto?")
+            if respuesta == "yes":
+                self.controlador.update_delete(articulo[0])
+                self.tree.delete(articulo[0])
+
+
+    def select(self):
+        codigo = self.entry_codigo.get().strip()
+        nombre = self.entry_nombre.get().strip()
+        lista_art = []
+        if len(codigo) == 0:
+            if len(nombre) == 0:
+                lista_art = self.controlador.select_all
+            else:
+                lista_art = self.controlador.select_by_name(nombre)
+        else:
+            lista_art = self.controlador.select_by_id(codigo)
+
+        self.insertar_en_tabla(lista_art)
+
+    
+    def insertar_en_tabla(self, lista=[]):
+        if len(lista) != 0:
+            for i in lista:
+                self.tree.insert("", "end", values=(i.cod_articulo, i.nombre))
+
 
     def set_controlador(self, controlador):
         self.controlador = controlador
