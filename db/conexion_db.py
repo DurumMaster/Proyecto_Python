@@ -1,13 +1,5 @@
 import configparser
 import psycopg2
-from model.articulo import Articulo
-
-NOMBRE_TABLA = "ARTICULOS"
-NOM_COL_COD_ART = "CODIGO_ARTICULOO"
-NOM_COL_NOM = "NOMBRE"
-NOM_COL_DESC = "DESCRIPCION"
-NOM_COL_PRE = "PRECIO"
-NOM_COL_DISP = "DISPONIBLE"
 
 class ConDB:
     def __init__(self):
@@ -32,8 +24,3 @@ class ConDB:
             print(ex)
 
         return con
-
-
-class ListaArticulos:
-    def __init__(self):
-        self.con = ConDB()

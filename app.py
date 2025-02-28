@@ -7,7 +7,9 @@ from view.frame_reg_compra import FrameRegCompra
 
 from controller.controller import Controller
 
-from model.lista_articulos import ListaArticulos
+from model.articulo import DBArticulos
+from model.compra import DBCompra
+from model.compra_articulo import DBCompraArticulo
 
 class App(Tk):
 
@@ -19,7 +21,9 @@ class App(Tk):
         self.resizable(False, False)
 
         # Crear el model
-        self.model = ListaArticulos()
+        self.modelArt = DBArticulos()
+        self.modelCom = DBCompra()
+        self.modelComArt = DBCompraArticulo()
         self.crear_menu()
 
         # Crear objetos que representan la vista
@@ -34,7 +38,7 @@ class App(Tk):
         self.contenedor.seleccionar_frame(self.lista_frames[0])
 
         #Crear el controlador
-        self.controlador = Controller(self.contenedor, self.model)
+        self.controlador = Controller(self.contenedor, self.modelArt, self.modelCom, self.modelComArt)
 
         self.lista_frames[1].set_controlador(self.controlador)
 
