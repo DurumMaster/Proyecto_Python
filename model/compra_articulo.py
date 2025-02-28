@@ -15,7 +15,7 @@ class DBCompraArticulo:
     def __init__(self):
         self.con = ConDB()
 
-    def insertCompArt(self, compraArt):
+    def insert_comp_art(self, compraArt):
         con = None
         cur = None
         try:

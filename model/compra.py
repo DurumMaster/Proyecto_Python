@@ -16,7 +16,7 @@ class DBCompra:
         self.con = ConDB()
 
     
-    def insertComp(self, comp):
+    def insert_comp(self, comp):
         con = None
         cur = None
         try:
