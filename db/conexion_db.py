@@ -4,7 +4,7 @@ import psycopg2
 class ConDB:
     def __init__(self):
         config = configparser.ConfigParser()
-        config.read("WS_Python_T1\\Pruebas\\PruebaMVC_DB\\config.ini")
+        config.read("config.ini")
         self.dbname = config['BBDD']['dbname']
         self.user = config['BBDD']['user']
         self.password = config['BBDD']['password']
