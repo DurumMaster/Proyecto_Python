@@ -20,6 +20,10 @@ class Controller:
     def select_by_id(self, id=""):
         return self.modelArt.get_art_by_id(id)
     
+    
+    def select_by_id_and_name(self, id="", name=""):
+        return self.modelArt.select_by_id_and_name(id, name)
+    
 
     def update_delete(self, id):
         self.modelArt.update_delete(id)
@@ -31,7 +35,7 @@ class Controller:
         if isModificado:
             self.view.mostrar_mensaje("El artículo se ha modificado correctamente.")
         else:
-            self.view.mensaje_error("Ha ocurrido un error al modificar el artículo.") 
+            self.view.mensaje_error("Ha ocurrido un error al modificar el artículo.")
         self.show_consultar()
 
 

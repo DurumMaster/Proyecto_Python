@@ -105,6 +105,8 @@ class FrameConArt(ttk.Frame):
                 lista_art = self.controlador.select_all()
             else:
                 lista_art = self.controlador.select_by_name(nombre)
+        elif len(codigo) != 0 and len(nombre) != 0:
+            lista_art = self.controlador.select_by_id_and_name(codigo, nombre)
         else:
             lista_art = self.controlador.select_by_id(codigo)
 

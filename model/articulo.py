@@ -34,12 +34,12 @@ class DBArticulos:
 
             con.commit()
 
-            return False
+            return True
 
         except Exception as e:
             print("Error al insertar articulo")
             print(e)
-            return True
+            return False
         finally:
             if cur != None:
                 cur.close()
@@ -87,7 +87,7 @@ class DBArticulos:
             con = self.con.getConexion()
             cur = con.cursor()
 
-            cur.execute("SELECT * FROM " + NOMBRE_TABLA + " WHERE " + NOM_COL_COD_ART + " = %s AND " + NOM_COL_DISP + " = 'SI'", (id,))
+            cur.execute("SELECT * FROM " + NOMBRE_TABLA + " WHERE " + NOM_COL_COD_ART + " LIKE %s AND " + NOM_COL_DISP + " = 'SI'", (id + "%",))
             
             continuar = True
             while continuar:
@@ -119,7 +119,7 @@ class DBArticulos:
             con = self.con.getConexion()
             cur = con.cursor()
 
-            cur.execute("SELECT * FROM " + NOMBRE_TABLA + " WHERE " + NOM_COL_NOM + " = %s AND " + NOM_COL_DISP + " = 'SI'", (nombre,))
+            cur.execute("SELECT * FROM " + NOMBRE_TABLA + " WHERE " + NOM_COL_NOM + " LIKE %s AND " + NOM_COL_DISP + " = 'SI'", (nombre + '%',))
             
             continuar = True
             while continuar:
@@ -141,6 +141,37 @@ class DBArticulos:
 
         return art_list
     
+
+    def select_by_id_and_name(self, id, nombre):
+        con = None
+        cur = None
+        art_list = []
+        try:
+            con = self.con.getConexion()
+            cur = con.cursor()
+
+            cur.execute("SELECT * FROM " + NOMBRE_TABLA + " WHERE " + NOM_COL_NOM + " LIKE %s OR " + NOM_COL_COD_ART + " LIKE %s AND " + NOM_COL_DISP + " = 'SI'", (nombre + '%', id + "%"))
+            
+            continuar = True
+            while continuar:
+                reg = cur.fetchone()
+                if reg == None:
+                    continuar = False
+                else:
+                    art_list.append(Articulo(reg[0], reg[1], reg[2], reg[3], reg[4]))
+
+        except Exception as e:
+            print("Error al consultar articulos por nombre")
+            print(e)
+        finally:
+            if cur != None:
+                cur.close()
+            
+            if con != None:
+                con.close()
+
+        return art_list
+
 
     def update_delete(self,id):
         con = None
@@ -171,18 +202,16 @@ class DBArticulos:
             con = self.con.getConexion()
             cur = con.cursor()
 
-            updateArt = (art.nombre, art.descripcion, art.precio)
-            cur.execute("UPDATE " + NOMBRE_TABLA + " SET " + NOM_COL_DESC + " = ?, SET " + NOM_COL_NOM + " = ?, SET " + NOM_COL_PRE + " = ? WHERE " + NOM_COL_COD_ART + " = ?", updateArt)
+            updateArt = (art.nombre, art.descripcion, art.precio, art.cod_articulo)
+            cur.execute("UPDATE " + NOMBRE_TABLA + " SET " + NOM_COL_NOM + " = %s, " + NOM_COL_DESC + " = %s, " + NOM_COL_PRE + " = %s WHERE " + NOM_COL_COD_ART + " = %s", updateArt)
 
             con.commit()
 
-        except Exception as e:
-            print("Error al actualizar el articulo")
-            print(e)
             return True
 
-        except Exception :
+        except Exception as e:
             print("Error al actualizar el de articulo")
+            print(e)
             return False
         finally:
             if cur != None:
