@@ -17,7 +17,7 @@ class App(Tk):
         super().__init__(screenName, baseName, className, useTk, sync, use)
 
         self.title('Tienda de Ropa')
-        self.geometry('350x200')
+        self.geometry('450x550')
         self.resizable(False, False)
 
         # Crear el model
@@ -35,12 +35,17 @@ class App(Tk):
         self.lista_frames[1] = FrameInsArt(self.contenedor)
         self.lista_frames[2] = FrameRegCompra(self.contenedor)
 
+        for frame in self.lista_frames.values():
+            frame.grid(row=0, column=0, sticky="nsew")
+
         self.contenedor.seleccionar_frame(self.lista_frames[0])
 
         #Crear el controlador
         self.controlador = Controller(self.contenedor, self.modelArt, self.modelCom, self.modelComArt)
 
+        self.lista_frames[0].set_controlador(self.controlador)
         self.lista_frames[1].set_controlador(self.controlador)
+        self.lista_frames[2].set_controlador(self.controlador)
 
 
     def crear_menu(self):
