@@ -30,7 +30,7 @@ class DBArticulos:
 
             insertArt = (articulo.cod_articulo, articulo.nombre, articulo.descripcion, articulo.precio, "SI")
             print(insertArt)
-            cur.execute("INSERT INTO " + NOMBRE_TABLA + " ( " + NOM_COL_COD_ART + ", " + NOM_COL_NOM + ", " + NOM_COL_DESC + ", " + NOM_COL_PRE + ", " + NOM_COL_DISP + ") VALUES ('?', '?', '?', ?, '?')", insertArt)
+            cur.execute("INSERT INTO " + NOMBRE_TABLA + " ( " + NOM_COL_COD_ART + ", " + NOM_COL_NOM + ", " + NOM_COL_DESC + ", " + NOM_COL_PRE + ", " + NOM_COL_DISP + ") VALUES (%s, %s, %s, %s, %s)", insertArt)
 
             con.commit()
 
@@ -61,11 +61,12 @@ class DBArticulos:
                 if reg == None:
                     continuar = False
                 else:
-                    art_list.append(Articulo(reg.cod_articulo, reg.nombre, reg.descripcion, reg.precio, reg.disponible))
+                    art_list.append(Articulo(reg[0], reg[1], reg[2], reg[3], reg[4]))
 
 
-        except Exception :
+        except Exception as e:
             print("Error al consultar los articulos")
+            print(e)
         finally:
             if cur != None:
                 cur.close()
@@ -83,19 +84,20 @@ class DBArticulos:
             con = self.con.getConexion()
             cur = con.cursor()
 
-            cur.execute("SELECT * FROM " + NOMBRE_TABLA + " WHERE " + NOM_COL_COD_ART + " = '?'", id)
+            cur.execute("SELECT * FROM " + NOMBRE_TABLA + " WHERE " + NOM_COL_COD_ART + " = %s AND " + NOM_COL_DISP + " = 'SI'", (id,))
             
             continuar = True
             while continuar:
-                reg = cur.fetchone
+                reg = cur.fetchone()
                 if reg == None:
                     continuar = False
                 else:
-                    art_list.append(Articulo(reg.cod_articulo, reg.nombre, reg.descripcion, reg.precio, reg.disponible))
+                    art_list.append(Articulo(reg[0], reg[1], reg[2], reg[3], reg[4]))
 
 
-        except Exception :
+        except Exception as e:
             print("Error al consultar articulos por id")
+            print(e)
         finally:
             if cur != None:
                 cur.close()
@@ -114,18 +116,19 @@ class DBArticulos:
             con = self.con.getConexion()
             cur = con.cursor()
 
-            cur.execute("SELECT * FROM " + NOMBRE_TABLA + " WHERE " + NOM_COL_NOM + " = '?'", nombre)
+            cur.execute("SELECT * FROM " + NOMBRE_TABLA + " WHERE " + NOM_COL_NOM + " = %s AND " + NOM_COL_DISP + " = 'SI'", (nombre,))
             
             continuar = True
             while continuar:
-                reg = cur.fetchone
+                reg = cur.fetchone()
                 if reg == None:
                     continuar = False
                 else:
-                    art_list.append(Articulo(reg.cod_articulo, reg.nombre, reg.descripcion, reg.precio, reg.disponible))
+                    art_list.append(Articulo(reg[0], reg[1], reg[2], reg[3], reg[4]))
 
-        except Exception :
+        except Exception as e:
             print("Error al consultar articulos por nombre")
+            print(e)
         finally:
             if cur != None:
                 cur.close()
@@ -143,12 +146,13 @@ class DBArticulos:
             con = self.con.getConexion()
             cur = con.cursor()
 
-            cur.execute("UPDATE " + NOMBRE_TABLA + " SET " + NOM_COL_DISP + " = 'NO' WHERE " + NOM_COL_COD_ART + " = '?'", id)
+            cur.execute("UPDATE " + NOMBRE_TABLA + " SET " + NOM_COL_DISP + " = 'NO' WHERE " + NOM_COL_COD_ART + " = %s", (id,))
 
             con.commit()
 
-        except Exception :
+        except Exception as e:
             print("Error al actualizar la disponibilidad de articulos")
+            print(e)
         finally:
             if cur != None:
                 cur.close()
@@ -164,20 +168,17 @@ class DBArticulos:
             con = self.con.getConexion()
             cur = con.cursor()
 
-            updateArt = [(art.nombre, art.descripcion, art.precio)]
-            cur.execute("UPDATE " + NOMBRE_TABLA + " SET " + NOM_COL_DESC + " = '?', SET " + NOM_COL_NOM + " = '?', SET " + NOM_COL_PRE + " = '?' WHERE " + NOM_COL_COD_ART + " = '?'", updateArt)
+            updateArt = (art.nombre, art.descripcion, art.precio)
+            cur.execute("UPDATE " + NOMBRE_TABLA + " SET " + NOM_COL_DESC + " = ?, SET " + NOM_COL_NOM + " = ?, SET " + NOM_COL_PRE + " = ? WHERE " + NOM_COL_COD_ART + " = ?", updateArt)
 
             con.commit()
 
-        except Exception :
-            print("Error al actualizar el de articulo")
+        except Exception as e:
+            print("Error al actualizar el articulo")
+            print(e)
         finally:
             if cur != None:
                 cur.close()
             
             if con != None:
                 con.close()
-
-
-
-                

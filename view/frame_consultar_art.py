@@ -85,7 +85,9 @@ class FrameConArt(ttk.Frame):
         else:
             respuesta = messagebox.askquestion("Eliminar artículo", "¿Estás seguro de que quieres eliminar el producto?")
             if respuesta == "yes":
-                self.controlador.update_delete(articulo[0])
+                item = self.tree.item(articulo[0])
+                print(item['values'][0])
+                self.controlador.update_delete(str(item['values'][0]))
                 self.tree.delete(articulo[0])
 
 
@@ -95,7 +97,7 @@ class FrameConArt(ttk.Frame):
         lista_art = []
         if len(codigo) == 0:
             if len(nombre) == 0:
-                lista_art = self.controlador.select_all
+                lista_art = self.controlador.select_all()
             else:
                 lista_art = self.controlador.select_by_name(nombre)
         else:
@@ -103,9 +105,16 @@ class FrameConArt(ttk.Frame):
 
         self.insertar_en_tabla(lista_art)
 
+
+    def limpiar_tabla(self):
+        articulos = self.tree.get_children()
+        for i in articulos:
+            self.tree.delete(i)
+
     
     def insertar_en_tabla(self, lista=[]):
-        if len(lista) != 0:
+        self.limpiar_tabla()
+        if lista:
             for i in lista:
                 self.tree.insert("", "end", values=(i.cod_articulo, i.nombre))
 

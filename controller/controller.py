@@ -15,7 +15,7 @@ class Controller:
         return self.modelArt.get_art_by_name(nombre)
     
     
-    def select_by_id(self, id):
+    def select_by_id(self, id=""):
         return self.modelArt.get_art_by_id(id)
     
 
@@ -23,7 +23,7 @@ class Controller:
         self.modelArt.update_delete(id)
     
 
-    def update_delete(self, articulo):
+    def update_art(self, articulo):
         self.modelArt.update_art(articulo)
 
     def guardar_art(self, articulo):
