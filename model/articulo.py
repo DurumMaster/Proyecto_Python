@@ -28,13 +28,15 @@ class DBArticulos:
             con = self.con.getConexion()
             cur = con.cursor()
 
-            insertArt = [(articulo.cod_articulo, articulo.nombre, articulo.descripcion, articulo.precio, "SI")]
-            cur.execute("INSERT INTO " + NOMBRE_TABLA + " VALUES( " + NOM_COL_COD_ART + ", " + NOM_COL_NOM + ", " + NOM_COL_DESC + ", " + NOM_COL_PRE + ", " + NOM_COL_DISP + ") VALUES (?, ?, ?, ?, ?)", insertArt)
+            insertArt = (articulo.cod_articulo, articulo.nombre, articulo.descripcion, articulo.precio, "SI")
+            print(insertArt)
+            cur.execute("INSERT INTO " + NOMBRE_TABLA + " ( " + NOM_COL_COD_ART + ", " + NOM_COL_NOM + ", " + NOM_COL_DESC + ", " + NOM_COL_PRE + ", " + NOM_COL_DISP + ") VALUES ('?', '?', '?', ?, '?')", insertArt)
 
             con.commit()
 
-        except Exception :
+        except Exception as e:
             print("Error al insertar articulo")
+            print(e)
         finally:
             if cur != None:
                 cur.close()
@@ -73,10 +75,6 @@ class DBArticulos:
 
         return art_list
 
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/rama-consulta-art
     def get_art_by_id(self, id):
         con = None
         cur = None
@@ -108,11 +106,7 @@ class DBArticulos:
         return art_list
     
 
-<<<<<<< HEAD
-    def get_art_by_nombre(self, nombre):
-=======
     def get_art_by_name(self, nombre):
->>>>>>> origin/rama-consulta-art
         con = None
         cur = None
         art_list = []
@@ -183,3 +177,7 @@ class DBArticulos:
             
             if con != None:
                 con.close()
+
+
+
+                
