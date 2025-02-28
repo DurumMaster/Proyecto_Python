@@ -6,11 +6,6 @@ class Controller:
         self.modelComp = modelComp
         self.modelCompArt = modelCompArt
 
-
-    def guardar_art(self, articulo):
-        self.modelArt.insert_art(articulo)
-        self.view.mostrar_mensaje("El artículo se ha guardado correctamente.")
-
     
     def select_all(self):
         return self.modelArt.get_all_art()
@@ -31,3 +26,6 @@ class Controller:
     def update_delete(self, articulo):
         self.modelArt.update_art(articulo)
 
+    def guardar_art(self, articulo):
+        self.modelArt.insert_art(articulo)
+        self.view.mostrar_mensaje("El artículo se ha guardado correctamente.")
