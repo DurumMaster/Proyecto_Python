@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+import re
 
 from model.articulo import Articulo
 
@@ -69,19 +70,10 @@ class FrameInsArt(ttk.Frame):
         if len(descripcion) > MAX_CARAC_DESC:
             messagebox.showerror("Error", "La descripción no puede tener más de 200 letras.")
             return
-        try:
-            precio_float = float(precio)
-            
-            if precio_float <= 0:
-                raise ValueError("Debes introducir un precio positivo.")
-
-            if '.' in precio:
-                _, decimales = precio.split('.')
-                if len(decimales) > 2:
-                    raise ValueError("El precio no puede tener más de 2 decimales.")
-            
-        except ValueError as e:
-            messagebox.showerror("Error", str(e))
+        precio = precio.replace(',', '.')
+        precio_pattern = r"^\d+(\.\d{1,2})?$"
+        if not re.match(precio_pattern, precio):
+            messagebox.showerror("Error", "El precio debe ser un número positivo con hasta 2 decimales.")
             return
         
         articulo = Articulo(codigo, nombre, descripcion, precio, "SI")

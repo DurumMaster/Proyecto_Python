@@ -40,6 +40,8 @@ class App(Tk):
         for frame in self.lista_frames.values():
             frame.grid(row=0, column=0, sticky="nsew")
 
+        self.contenedor.frames = self.lista_frames
+
         #Crear el controlador
         self.controlador = Controller(self.contenedor, self.modelArt, self.modelCom, self.modelComArt)
 

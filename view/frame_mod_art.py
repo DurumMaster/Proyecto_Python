@@ -1,5 +1,12 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
+import re
+
+from model.articulo import Articulo
+
+MAX_CARAC_NOMBRE = 50
+MAX_CARAC_DESC = 200
 
 class FrameModArt(ttk.Frame):
     def __init__(self, parent):
@@ -38,10 +45,10 @@ class FrameModArt(ttk.Frame):
         self.frame_botones = ttk.Frame(self)
         self.frame_botones.grid(row=5, column=0, columnspan=2, pady=10)
 
-        self.btn_guardar = ttk.Button(self.frame_botones, text="GUARDAR")
+        self.btn_guardar = ttk.Button(self.frame_botones, text="GUARDAR", command=self.guardar)
         self.btn_guardar.grid(row=0, column=0, padx=5)
 
-        self.btn_cancelar = ttk.Button(self.frame_botones, text="CANCELAR")
+        self.btn_cancelar = ttk.Button(self.frame_botones, text="CANCELAR", command=self.cancelar)
         self.btn_cancelar.grid(row=0, column=1, padx=5)
 
         # Ajuste de columnas
@@ -50,3 +57,63 @@ class FrameModArt(ttk.Frame):
 
     def set_controlador(self, controlador):
         self.controlador = controlador
+
+    def guardar(self):
+
+        nombre = self.entry_nombre.get().strip()
+        descripcion = self.text_descripcion.get("1.0", END).strip()
+        precio = self.entry_precio.get().strip()
+
+        if not nombre:
+            messagebox.showerror("Error", "Debes introducir un nombre al artículo.")
+            return
+        if len(nombre) > MAX_CARAC_NOMBRE:
+            messagebox.showerror("Error", "El nombre no puede tener más de 50 letras.")
+            return
+        if not descripcion:
+            messagebox.showerror("Error", "Debes introducir una descripción al artículo.")
+            return
+        if len(descripcion) > MAX_CARAC_DESC:
+            messagebox.showerror("Error", "La descripción no puede tener más de 200 letras.")
+            return
+        precio = precio.replace(',', '.')
+        precio_pattern = r"^\d+(\.\d{1,2})?$"
+        if not re.match(precio_pattern, precio):
+            messagebox.showerror("Error", "El precio debe ser un número positivo con hasta 2 decimales.")
+            return
+        
+        articulo = Articulo(self.entry_codigo.get(), nombre, descripcion, precio, "SI")
+        
+        if articulo:
+            respuesta = messagebox.askyesno("Confirmación", "¿Estás seguro de que quieres modificar este artículo?")
+            if respuesta:
+                self.controlador.update_art(articulo)
+
+
+    def cancelar(self):
+        respuesta = messagebox.askyesno("Confirmación", "¿Estás seguro de que quieres cancelar? Se borrarán todos los datos.")
+        if respuesta:
+            self.controlador.show_consultar()
+
+    def cargar_datos(self, articulo):
+        self.clean()
+
+        self.entry_codigo.config(state="normal")
+        self.entry_codigo.insert(0, articulo.cod_articulo)
+        self.entry_codigo.config(state="disabled")
+
+        self.entry_nombre.insert(0, articulo.nombre)
+
+        self.text_descripcion.insert("1.0", articulo.descripcion)
+
+        self.entry_precio.insert(0, articulo.precio)
+
+
+    def clean(self):
+        self.entry_codigo.config(state="normal")
+        self.entry_codigo.delete(0, END)
+        self.entry_codigo.config(state="disabled")
+        
+        self.entry_nombre.delete(0, END)
+        self.text_descripcion.delete("1.0", END)
+        self.entry_precio.delete(0, END)
