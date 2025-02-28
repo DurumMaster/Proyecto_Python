@@ -4,6 +4,7 @@ from view.ventana_principal import Ventana
 from view.frame_consultar_art import FrameConArt
 from view.frame_insert_art import FrameInsArt
 from view.frame_reg_compra import FrameRegCompra
+from view.frame_mod_art import FrameModArt
 
 from controller.controller import Controller
 
@@ -34,11 +35,10 @@ class App(Tk):
         self.lista_frames[0] = FrameConArt(self.contenedor)
         self.lista_frames[1] = FrameInsArt(self.contenedor)
         self.lista_frames[2] = FrameRegCompra(self.contenedor)
+        self.lista_frames[3] = FrameModArt(self.contenedor)
 
         for frame in self.lista_frames.values():
             frame.grid(row=0, column=0, sticky="nsew")
-
-        self.contenedor.seleccionar_frame(self.lista_frames[0])
 
         #Crear el controlador
         self.controlador = Controller(self.contenedor, self.modelArt, self.modelCom, self.modelComArt)
@@ -46,7 +46,9 @@ class App(Tk):
         self.lista_frames[0].set_controlador(self.controlador)
         self.lista_frames[1].set_controlador(self.controlador)
         self.lista_frames[2].set_controlador(self.controlador)
+        self.lista_frames[3].set_controlador(self.controlador)
 
+        self.cargar_consulta_art()
 
     def crear_menu(self):
         barra_menu = Menu(self)
@@ -65,15 +67,21 @@ class App(Tk):
 
 
     def show(self):
-        self.contenedor.seleccionar_frame(self.lista_frames[0])
-        #TODO: sirve para leer los artículos y cargarlos
-        #self.lista_frames[2].cargar_lista(self.model.leer())
+        self.cargar_consulta_art()
+        
 
     def add_art(self):
         self.contenedor.seleccionar_frame(self.lista_frames[1])
 
+
     def add_com(self):
         self.contenedor.seleccionar_frame(self.lista_frames[2])
+
+
+    def cargar_consulta_art(self):
+        self.contenedor.seleccionar_frame(self.lista_frames[0])
+        self.lista_frames[0].insertar_en_tabla(self.controlador.select_all())
+        
 
 if __name__ == "__main__":
     app = App()

@@ -55,11 +55,11 @@ class DBArticulos:
             
             continuar = True
             while continuar:
-                reg = cur.fetchone
+                reg = cur.fetchone()
                 if reg == None:
                     continuar = False
                 else:
-                    art_list.append(Articulo())
+                    art_list.append(Articulo(reg.cod_articulo, reg.nombre, reg.descripcion, reg.precio, reg.disponible))
 
 
         except Exception :
@@ -71,7 +71,12 @@ class DBArticulos:
             if con != None:
                 con.close()
 
+        return art_list
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/rama-consulta-art
     def get_art_by_id(self, id):
         con = None
         cur = None
@@ -88,7 +93,7 @@ class DBArticulos:
                 if reg == None:
                     continuar = False
                 else:
-                    art_list.append(Articulo())
+                    art_list.append(Articulo(reg.cod_articulo, reg.nombre, reg.descripcion, reg.precio, reg.disponible))
 
 
         except Exception :
@@ -103,7 +108,11 @@ class DBArticulos:
         return art_list
     
 
+<<<<<<< HEAD
     def get_art_by_nombre(self, nombre):
+=======
+    def get_art_by_name(self, nombre):
+>>>>>>> origin/rama-consulta-art
         con = None
         cur = None
         art_list = []
@@ -119,7 +128,7 @@ class DBArticulos:
                 if reg == None:
                     continuar = False
                 else:
-                    art_list.append(Articulo())
+                    art_list.append(Articulo(reg.cod_articulo, reg.nombre, reg.descripcion, reg.precio, reg.disponible))
 
         except Exception :
             print("Error al consultar articulos por nombre")
