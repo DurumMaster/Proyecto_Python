@@ -89,8 +89,6 @@ if __name__ == "__main__":
     app = App()
     app.mainloop()
 
-#TODO: Falta actualizar la lista cuando se modifica un articulo.
-#TODO: Que no puedas poner el mismo codigo al crear un articulo.
 #TODO: Mejorar la interfaz.
 #TODO: Funcionalidad comprar.
 #TODO: Revisar return en Update e Insert de articulo que pasen por finally.
