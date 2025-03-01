@@ -18,7 +18,7 @@ class App(Tk):
         super().__init__(screenName, baseName, className, useTk, sync, use)
 
         self.title('Tienda de Ropa')
-        self.geometry('950x1050')
+        self.geometry('440x720')
         self.resizable(False, False)
 
         # Crear el model

@@ -27,7 +27,7 @@ class FrameConArt(ttk.Frame):
         self.entry_nombre = ttk.Entry(self.frame_formulario, width=50)
         self.entry_nombre.grid(row=1, column=1, padx=5, pady=5, sticky=W)
 
-        self.btn_buscar = ttk.Button(self, text="🔍 BUSCAR", command=self.select, style="Accent.TButton")
+        self.btn_buscar = ttk.Button(self, text="🔍 BUSCAR", command=self.select, style="Search.TButton")
         self.btn_buscar.grid(row=3, column=0, columnspan=2, pady=10)
 
         self.frame_tabla = ttk.Frame(self, padding=10, style="InnerCard.TFrame")
@@ -67,6 +67,7 @@ class FrameConArt(ttk.Frame):
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
 
+
     def estilizar_widgets(self):
         style = ttk.Style()
         
@@ -75,8 +76,8 @@ class FrameConArt(ttk.Frame):
         style.configure("Card.TFrame", background="#FFFFFF", relief="raised", borderwidth=2)
         style.configure("InnerCard.TFrame", background="#F8F9FA", relief="groove", borderwidth=1)
         
-        style.configure("Accent.TButton", font=("Arial", 10, "bold"), foreground="#000000", background="#00FF00", padding=5)
-        style.map("Accent.TButton", background=[("active", "#229954")])
+        style.configure("Search.TButton", font=("Arial", 10, "bold"), foreground="#000000", background="#00FF00", padding=5)
+        style.map("Search.TButton", background=[("active", "#229954")])
 
         style.configure("Modify.TButton", font=("Arial", 10, "bold"), foreground="#000000", background="#FFA500", padding=5)
         style.map("Modify.TButton", background=[("active", "#229954")])

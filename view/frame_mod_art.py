@@ -42,7 +42,7 @@ class FrameModArt(ttk.Frame):
         self.frame_botones = ttk.Frame(self, padding=10, style="InnerCard.TFrame")
         self.frame_botones.grid(row=6, column=0, columnspan=2, pady=15)
 
-        self.btn_guardar = ttk.Button(self.frame_botones, text="✔ GUARDAR", command=self.guardar, style="Accent.TButton")
+        self.btn_guardar = ttk.Button(self.frame_botones, text="✔ GUARDAR", command=self.guardar, style="Ok2.TButton")
         self.btn_guardar.grid(row=0, column=0, padx=10)
 
         self.btn_cancelar = ttk.Button(self.frame_botones, text="❌ CANCELAR", command=self.cancelar, style="Cancel.TButton")
@@ -53,15 +53,20 @@ class FrameModArt(ttk.Frame):
 
         self.estilizar_widgets()
 
+
     def estilizar_widgets(self):
         style = ttk.Style()
-        style.configure("Accent.TButton", background="#3498db", foreground="white", padding=10)
-        style.configure("Cancel.TButton", background="#e74c3c", foreground="white", padding=10)
+        style.configure("Ok2.TButton", background="#3498db", foreground="#000000", padding=10)
+        style.map("Ok2.TButton", background=[("active", "#229954")])
+        style.configure("Cancel.TButton", background="#e74c3c", foreground="#000000", padding=10)
+        style.map("Cancel.TButton", background=[("active", "#229954")])
         style.configure("TEntry", padding=5)
         style.configure("InnerCard.TFrame", background="#ecf0f1")
 
+
     def set_controlador(self, controlador):
         self.controlador = controlador
+
 
     def guardar(self):
 
@@ -99,6 +104,7 @@ class FrameModArt(ttk.Frame):
         respuesta = messagebox.askyesno("Confirmación", "¿Estás seguro de que quieres cancelar? Se borrarán todos los datos.")
         if respuesta:
             self.controlador.show_consultar()
+
 
     def cargar_datos(self, articulo):
         self.clean()

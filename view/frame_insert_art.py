@@ -47,13 +47,14 @@ class FrameInsArt(ttk.Frame):
         self.frame_botones = ttk.Frame(self)
         self.frame_botones.grid(row=3, column=0, columnspan=2, pady=15)
         
-        self.btn_guardar = ttk.Button(self.frame_botones, text="✔ GUARDAR", command=self.guardar_art, style="Accent.TButton")
+        self.btn_guardar = ttk.Button(self.frame_botones, text="✔ GUARDAR", command=self.guardar_art, style="Ok.TButton")
         self.btn_guardar.grid(row=0, column=0, padx=10)
         
         self.btn_cancelar = ttk.Button(self.frame_botones, text="❌ CANCELAR", command=self.cancelar, style="Danger.TButton")
         self.btn_cancelar.grid(row=0, column=1, padx=10)
         
         self.estilizar_widgets()
+
 
     def estilizar_widgets(self):
         style = ttk.Style()
@@ -62,14 +63,16 @@ class FrameInsArt(ttk.Frame):
         style.configure("Card.TFrame", background="#FFFFFF", relief="raised", borderwidth=2)
         style.configure("InnerCard.TFrame", background="#F8F9FA", relief="groove", borderwidth=1)
         
-        style.configure("Accent.TButton", font=("Arial", 10, "bold"), foreground="#000000", background="#27AE60", padding=5)
-        style.map("Accent.TButton", background=[("active", "#229954")])
+        style.configure("Ok.TButton", font=("Arial", 10, "bold"), foreground="#000000", background="#27AE60", padding=5)
+        style.map("Ok.TButton", background=[("active", "#229954")])
         
         style.configure("Danger.TButton", font=("Arial", 10, "bold"), foreground="#000000", background="#E74C3C", padding=5)
         style.map("Danger.TButton", background=[("active", "#229954")])
         
+
     def set_controlador(self, controlador):
         self.controlador = controlador
+
 
     def guardar_art(self):
         codigo = self.entry_codigo.get().strip()
@@ -116,11 +119,13 @@ class FrameInsArt(ttk.Frame):
         else:
             messagebox.showerror("Error","El código introducido ya está registrado")
 
+
     def cancelar(self):
         respuesta = messagebox.askquestion("Confirmar cancelación", "¿Estás seguro de que deseas cancelar y limpiar los datos?")
     
         if respuesta == 'yes':
             self.limpiar_datos()
+
 
     def limpiar_datos(self):
         self.entry_codigo.delete(0,"end")
