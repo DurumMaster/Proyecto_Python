@@ -13,6 +13,10 @@ class Controller:
         return self.modelArt.get_all_art()
     
 
+    def select_all_insert(self):
+        return self.modelArt.get_all_art_insert()
+
+
     def select_by_name(self, nombre):
         return self.modelArt.get_art_by_name(nombre)
     

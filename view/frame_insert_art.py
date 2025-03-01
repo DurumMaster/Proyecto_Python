@@ -55,35 +55,44 @@ class FrameInsArt(ttk.Frame):
         descripcion = self.text_descripcion.get("1.0", END).strip()
         precio = self.entry_precio.get().strip()
 
-        lista = self.controlador.select_all
+        lista = self.controlador.select_all_insert()
+        encontrado = False
 
-        if len(codigo) != CARAC_COD or " " in codigo or not codigo:
-            messagebox.showerror("Error", "El código deben ser 8 letras o números.")
-            return
-        if not nombre:
-            messagebox.showerror("Error", "Debes introducir un nombre al artículo.")
-            return
-        if len(nombre) > MAX_CARAC_NOMBRE:
-            messagebox.showerror("Error", "El nombre no puede tener más de 50 letras.")
-            return
-        if not descripcion:
-            messagebox.showerror("Error", "Debes introducir una descripción al artículo.")
-            return
-        if len(descripcion) > MAX_CARAC_DESC:
-            messagebox.showerror("Error", "La descripción no puede tener más de 200 letras.")
-            return
-        precio = precio.replace(',', '.')
-        precio_pattern = r"^\d+(\.\d{1,2})?$"
-        if not re.match(precio_pattern, precio):
-            messagebox.showerror("Error", "El precio debe ser un número positivo con hasta 2 decimales.")
-            return
-        
-        articulo = Articulo(codigo, nombre, descripcion, precio, "SI")
+        if lista:
+            for i in lista:
+                if i.cod_articulo == codigo:
+                    encontrado = True
 
-        if self.controlador:
-            self.controlador.guardar_art(articulo)
-            self.limpiar_datos()
-            self.entry_codigo.focus()
+        if not encontrado:
+            if len(codigo) != CARAC_COD or " " in codigo or not codigo:
+                messagebox.showerror("Error", "El código deben ser 8 letras o números.")
+                return
+            if not nombre:
+                messagebox.showerror("Error", "Debes introducir un nombre al artículo.")
+                return
+            if len(nombre) > MAX_CARAC_NOMBRE:
+                messagebox.showerror("Error", "El nombre no puede tener más de 50 letras.")
+                return
+            if not descripcion:
+                messagebox.showerror("Error", "Debes introducir una descripción al artículo.")
+                return
+            if len(descripcion) > MAX_CARAC_DESC:
+                messagebox.showerror("Error", "La descripción no puede tener más de 200 letras.")
+                return
+            precio = precio.replace(',', '.')
+            precio_pattern = r"^\d+(\.\d{1,2})?$"
+            if not re.match(precio_pattern, precio):
+                messagebox.showerror("Error", "El precio debe ser un número positivo con hasta 2 decimales.")
+                return
+            
+            articulo = Articulo(codigo, nombre, descripcion, precio, "SI")
+
+            if self.controlador:
+                self.controlador.guardar_art(articulo)
+                self.limpiar_datos()
+                self.entry_codigo.focus()
+        else:
+            messagebox.showerror("Error","El código introducido ya está registrado")
 
     def cancelar(self):
         respuesta = messagebox.askquestion("Confirmar cancelación", "¿Estás seguro de que deseas cancelar y limpiar los datos?")

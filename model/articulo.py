@@ -33,19 +33,53 @@ class DBArticulos:
             cur.execute("INSERT INTO " + NOMBRE_TABLA + " ( " + NOM_COL_COD_ART + ", " + NOM_COL_NOM + ", " + NOM_COL_DESC + ", " + NOM_COL_PRE + ", " + NOM_COL_DISP + ") VALUES (%s, %s, %s, %s, %s)", insertArt)
 
             con.commit()
-
-            return True
-
+            
+            if cur.rowcount > 0:
+                return True
+            else:
+                return False
+            
         except Exception as e:
             print("Error al insertar articulo")
             print(e)
-            return False
         finally:
             if cur != None:
                 cur.close()
             
             if con != None:
                 con.close()
+
+
+    def get_all_art_insert(self):
+        con = None
+        cur = None
+        art_list = []
+        try:
+            con = self.con.getConexion()
+            cur = con.cursor()
+
+            cur.execute("SELECT * FROM " + NOMBRE_TABLA)
+            
+            continuar = True
+            while continuar:
+                reg = cur.fetchone()
+                if reg == None:
+                    continuar = False
+                else:
+                    art_list.append(Articulo(reg[0], reg[1], reg[2], reg[3], reg[4]))
+
+
+        except Exception as e:
+            print("Error al consultar los articulos")
+            print(e)
+        finally:
+            if cur != None:
+                cur.close()
+            
+            if con != None:
+                con.close()
+
+        return art_list
 
 
     def get_all_art(self):
@@ -207,12 +241,14 @@ class DBArticulos:
 
             con.commit()
 
-            return True
+            if cur.rowcount > 0:
+                return True
+            else:
+                return False
 
         except Exception as e:
             print("Error al actualizar el de articulo")
             print(e)
-            return False
         finally:
             if cur != None:
                 cur.close()
