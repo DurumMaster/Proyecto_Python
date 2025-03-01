@@ -11,40 +11,62 @@ MAX_CARAC_DESC = 200
 
 class FrameInsArt(ttk.Frame):
     def __init__(self, parent):
-        super().__init__(parent)
+        super().__init__(parent, style="Card.TFrame")
         self.controlador = None
-        
-        self.label_titulo = ttk.Label(self, text="INSERTAR ARTÍCULO", font=("Arial", 12, "bold"))
-        self.label_titulo.grid(row=0, column=0, columnspan=2, pady=5, sticky=W)
-        
-        self.label_codigo = ttk.Label(self, text="Código:")
-        self.label_codigo.grid(row=1, column=0, sticky=W, padx=5, pady=2)
-        self.entry_codigo = ttk.Entry(self, width=20)
-        self.entry_codigo.grid(row=1, column=1, padx=5, pady=2, sticky=W)
-        
-        self.label_nombre = ttk.Label(self, text="Nombre:")
-        self.label_nombre.grid(row=2, column=0, sticky=W, padx=5, pady=2)
-        self.entry_nombre = ttk.Entry(self, width=30)
-        self.entry_nombre.grid(row=2, column=1, padx=5, pady=2, sticky=W)
-        
-        self.label_descripcion = ttk.Label(self, text="Descripción:")
-        self.label_descripcion.grid(row=3, column=0, sticky=W, padx=5, pady=2)
-        self.text_descripcion = Text(self, width=30, height=5)
-        self.text_descripcion.grid(row=3, column=1, padx=5, pady=2, sticky=W)
-        
-        self.label_precio = ttk.Label(self, text="Precio:")
-        self.label_precio.grid(row=4, column=0, sticky=W, padx=5, pady=2)
-        self.entry_precio = ttk.Entry(self, width=10)
-        self.entry_precio.grid(row=4, column=1, padx=5, pady=2, sticky=W)
 
+        self.label_titulo = ttk.Label(self, text="")
+        self.label_titulo.grid(row=0, column=0, columnspan=2)
+
+        self.label_titulo = ttk.Label(self, text="AGREGAR NUEVO ARTÍCULO", font=("Arial", 16, "bold"), foreground="#2C3E50")
+        self.label_titulo.grid(row=1, column=0, columnspan=2, pady=10)
+
+        self.frame_formulario = ttk.Frame(self, padding=10, style="InnerCard.TFrame")
+        self.frame_formulario.grid(row=2, column=0, columnspan=2, pady=10, padx=10, sticky=EW)
+
+        self.label_codigo = ttk.Label(self.frame_formulario, text="Código:")
+        self.label_codigo.grid(row=0, column=0, sticky=W, padx=5, pady=5)
+        self.entry_codigo = ttk.Entry(self.frame_formulario, width=20)
+        self.entry_codigo.grid(row=0, column=1, padx=5, pady=5, sticky=W)
+        
+        self.label_nombre = ttk.Label(self.frame_formulario, text="Nombre:")
+        self.label_nombre.grid(row=1, column=0, sticky=W, padx=5, pady=5)
+        self.entry_nombre = ttk.Entry(self.frame_formulario, width=30)
+        self.entry_nombre.grid(row=1, column=1, padx=5, pady=5, sticky=W)
+
+        self.label_descripcion = ttk.Label(self.frame_formulario, text="Descripción:")
+        self.label_descripcion.grid(row=2, column=0, sticky=W, padx=5, pady=5)
+        self.text_descripcion = Text(self.frame_formulario, width=30, height=5)
+        self.text_descripcion.grid(row=2, column=1, padx=5, pady=5, sticky=W)
+
+        self.label_precio = ttk.Label(self.frame_formulario, text="Precio:")
+        self.label_precio.grid(row=3, column=0, sticky=W, padx=5, pady=5)
+        self.entry_precio = ttk.Entry(self.frame_formulario, width=10)
+        self.entry_precio.grid(row=3, column=1, padx=5, pady=5, sticky=W)
+        
+        # Botones
         self.frame_botones = ttk.Frame(self)
-        self.frame_botones.grid(row=5, column=0, columnspan=2, pady=10)
+        self.frame_botones.grid(row=3, column=0, columnspan=2, pady=15)
         
-        self.btn_guardar = ttk.Button(self.frame_botones, text="GUARDAR", command=self.guardar_art)
-        self.btn_guardar.grid(row=0, column=0, padx=5)
+        self.btn_guardar = ttk.Button(self.frame_botones, text="✔ GUARDAR", command=self.guardar_art, style="Accent.TButton")
+        self.btn_guardar.grid(row=0, column=0, padx=10)
         
-        self.btn_cancelar = ttk.Button(self.frame_botones, text="CANCELAR", command=self.cancelar)
-        self.btn_cancelar.grid(row=0, column=1, padx=5)
+        self.btn_cancelar = ttk.Button(self.frame_botones, text="❌ CANCELAR", command=self.cancelar, style="Danger.TButton")
+        self.btn_cancelar.grid(row=0, column=1, padx=10)
+        
+        self.estilizar_widgets()
+
+    def estilizar_widgets(self):
+        style = ttk.Style()
+        
+        style.configure("TFrame", background="#ECF0F1")
+        style.configure("Card.TFrame", background="#FFFFFF", relief="raised", borderwidth=2)
+        style.configure("InnerCard.TFrame", background="#F8F9FA", relief="groove", borderwidth=1)
+        
+        style.configure("Accent.TButton", font=("Arial", 10, "bold"), foreground="#000000", background="#27AE60", padding=5)
+        style.map("Accent.TButton", background=[("active", "#229954")])
+        
+        style.configure("Danger.TButton", font=("Arial", 10, "bold"), foreground="#000000", background="#E74C3C", padding=5)
+        style.map("Danger.TButton", background=[("active", "#229954")])
         
     def set_controlador(self, controlador):
         self.controlador = controlador
