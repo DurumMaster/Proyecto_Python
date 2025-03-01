@@ -64,4 +64,22 @@ class Controller:
         self.view.seleccionar_frame(con_frame)
         lista = self.select_all()
         con_frame.insertar_en_tabla(lista)
+
+
+    def insert_compra(self, compra):
+        isInsertado = self.modelComp.insert_comp(compra)
+        if isInsertado:
+            self.view.mostrar_mensaje("Compra guardada con éxito")
+        else:
+            self.view.mensaje_error("Ha ocurrido un error al registrar la compra")
         
+
+    def insert_compra_articulo(self, compra):
+        isInsertado = self.modelCompArt.insert_comp_art(compra)
+        if isInsertado:
+            print("Compra guardada con éxito")
+        else:
+            print("Ha ocurrido un error al registrar la compra")
+
+    def get_id_compra(self):
+        return self.modelComp.get_ultimo_id()

@@ -22,13 +22,20 @@ class DBCompraArticulo:
             con = self.con.getConexion()
             cur = con.cursor()
 
-            insertCompArt = [(compraArt.cod_compra, compraArt.cod_articulo, compraArt.cantidad)]
-            cur.execute("INSERT INTO " + NOMBRE_TABLA + " VALUES( " + NOM_COL_COD_COMP + ", " + NOM_COL_COD_ART + ", " + NOM_COL_CANT + ") VALUES (?, ?, ?)", insertCompArt)
+            insertCompArt = (int(compraArt.cod_compra[0]), compraArt.cod_articulo, compraArt.cantidad)
+            cur.execute("INSERT INTO " + NOMBRE_TABLA + " ( " + NOM_COL_COD_COMP + ", " + NOM_COL_COD_ART + ", " + NOM_COL_CANT + ") VALUES (%s, %s, %s)", insertCompArt)
 
             con.commit()
+            
+            if cur.rowcount > 0:
+                return True
+            else:
+                return False
 
-        except Exception :
+
+        except Exception as e:
             print("Error al insertar compra-articulo")
+            print(e)
         finally:
             if cur != None:
                 cur.close()

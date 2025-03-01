@@ -1,6 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+from decimal import Decimal
+from datetime import datetime
+from model.compra import Compra
+from model.compra_articulo import CompraArticulo
 
 class FrameRegCompra(tk.Frame):
      def __init__(self, parent):
@@ -28,18 +32,18 @@ class FrameRegCompra(tk.Frame):
           self.scrollbar_x = ttk.Scrollbar(self.frame_tabla, orient=tk.HORIZONTAL)
           self.scrollbar_y = ttk.Scrollbar(self.frame_tabla, orient=tk.VERTICAL)
 
-          self.treeview = ttk.Treeview(self.frame_tabla, columns=("codigo", "nombre"), xscrollcommand=self.scrollbar_x.set, yscrollcommand=self.scrollbar_y.set)
-          self.treeview.heading("#0", text="")
-          self.treeview.heading("codigo", text="CODIGO")
-          self.treeview.heading("nombre", text="NOMBRE")
-          self.treeview.column("#0", width=0, stretch=tk.NO)
-          self.treeview.column("codigo", anchor=tk.W, width=100)
-          self.treeview.column("nombre", anchor=tk.W, width=200)
+          self.tree = ttk.Treeview(self.frame_tabla, columns=("codigo", "nombre"), xscrollcommand=self.scrollbar_x.set, yscrollcommand=self.scrollbar_y.set, selectmode="browse")
+          self.tree.heading("#0", text="")
+          self.tree.heading("codigo", text="CODIGO")
+          self.tree.heading("nombre", text="NOMBRE")
+          self.tree.column("#0", width=0, stretch=tk.NO)
+          self.tree.column("codigo", anchor=tk.W, width=100)
+          self.tree.column("nombre", anchor=tk.W, width=200)
 
-          self.scrollbar_x.config(command=self.treeview.xview)
-          self.scrollbar_y.config(command=self.treeview.yview)
+          self.scrollbar_x.config(command=self.tree.xview)
+          self.scrollbar_y.config(command=self.tree.yview)
 
-          self.treeview.grid(row=0, column=0, sticky=tk.NSEW)
+          self.tree.grid(row=0, column=0, sticky=tk.NSEW)
           self.scrollbar_x.grid(row=1, column=0, sticky=tk.EW)
           self.scrollbar_y.grid(row=0, column=1, sticky=tk.NS)
 
@@ -65,11 +69,13 @@ class FrameRegCompra(tk.Frame):
           # Precio total
           self.label_precio_total = ttk.Label(self, text="Precio total:")
           self.label_precio_total.grid(row=5, column=0, sticky=tk.W, padx=5, pady=2)
-          self.entry_precio_total = ttk.Entry(self, width=20)
+
+          self.var_precio_total = tk.StringVar()
+          self.entry_precio_total = ttk.Entry(self, textvariable=self.var_precio_total, width=20, state="disabled")
           self.entry_precio_total.grid(row=5, column=1, padx=5, pady=2, sticky=tk.W)
 
           # Botón registrar
-          self.btn_registrar = ttk.Button(self, text="REGISTRAR")
+          self.btn_registrar = ttk.Button(self, text="REGISTRAR", command=self.insert_compra)
           self.btn_registrar.grid(row=6, column=0, columnspan=3, pady=10)
 
           # Ajuste de columnas
@@ -77,34 +83,50 @@ class FrameRegCompra(tk.Frame):
           self.columnconfigure(1, weight=1)
           self.columnconfigure(2, weight=1)
 
+
+     def insert_compra(self):
+          if self.listbox.get:
+               respuesta = messagebox.askquestion("Registrar compra", "¿Has terminado de añadir artículos?")
+               if respuesta == "yes":
+                    fecha = datetime.now()
+                    self.controlador.insert_compra(Compra("", fecha.strftime("%d/%m/%Y %H:%M"), self.var_precio_total.get().split("€")[0]))
+                    self.controlador.insert_compra_articulo(CompraArticulo(self.controlador.get_id_compra(), self.tree.item(self.tree.selection(), "values")[0], self.spin_cantidad.get()))
+          else:
+               messagebox.showerror("Error", "No hay ningún articulo en la lista")
+
+
      def add(self):
-          selected_item = self.treeview.selection()
+          self.listbox.delete(0, tk.END)
+          selected_item = self.tree.selection()
           if not selected_item:
                messagebox.showerror("Error", "Debe seleccionar un artículo antes de añadirlo.")
                return
 
-          item_values = self.treeview.item(selected_item, "values")
-          codigo = item_values[0]
-          nombre = item_values[1]
-          descripcion = item_values[2]
+          item_values = self.tree.item(selected_item, "values")
+
+          lista = self.controlador.select_by_id(item_values[0])
+
+          codigo = lista[0].cod_articulo
+          nombre = lista[0].nombre
+          descripcion = lista[0].descripcion
           cantidad = self.spin_cantidad.get() 
-          precio = item_values[3]
+          precio = lista[0].precio
 
-          item_text = f"""
-- Código: {codigo}
-{nombre}
-Descripción: {descripcion}
-Cantidad: {cantidad}
-Precio unidad: {precio}€
-"""
+          self.listbox.insert("end","- Código: " + codigo)
+          self.listbox.insert("end", nombre)
+          self.listbox.insert("end","Descripción: " + descripcion)
+          self.listbox.insert("end","Cantidad: " + cantidad)
+          self.listbox.insert("end","Precio Unidad: " + str(precio) + "€")
 
-          self.listbox.insert("end", item_text)
+          precio_total = precio * Decimal(cantidad)
+          self.var_precio_total.set(f"{precio_total}€")
+
 
      def buscar(self):
           nombre = self.entry_nombre.get().strip()
           lista_art = []
           if len(nombre) == 0:
-               messagebox("Error", "Debe introducir un nombre en el filtro para poder buscar.")
+               messagebox.showerror("Error", "Debe introducir un nombre en el filtro para poder buscar.")
           else:
                lista_art = self.controlador.select_by_name(nombre)
 
@@ -117,7 +139,7 @@ Precio unidad: {precio}€
                for i in lista:
                     self.tree.insert("", "end", values=(i.cod_articulo, i.nombre))
           else:
-               messagebox("Error", "No se ha encontrado ningún artículo.")
+               messagebox.showerror("Error", "No se ha encontrado ningún artículo.")
 
 
      def limpiar_tabla(self):
