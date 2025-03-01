@@ -30,7 +30,6 @@ class Controller:
     
 
     def update_art(self, articulo):
-        self.modelArt.update_art(articulo)
         isModificado = self.modelArt.update_art(articulo)
         if isModificado:
             self.view.mostrar_mensaje("El artículo se ha modificado correctamente.")
@@ -61,3 +60,6 @@ class Controller:
     def show_consultar(self):
         con_frame = self.view.frames[0]
         self.view.seleccionar_frame(con_frame)
+        lista = self.select_all()
+        con_frame.insertar_en_tabla(lista)
+        

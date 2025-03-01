@@ -55,6 +55,8 @@ class FrameInsArt(ttk.Frame):
         descripcion = self.text_descripcion.get("1.0", END).strip()
         precio = self.entry_precio.get().strip()
 
+        lista = self.controlador.select_all
+
         if len(codigo) != CARAC_COD or " " in codigo or not codigo:
             messagebox.showerror("Error", "El código deben ser 8 letras o números.")
             return
