@@ -1,5 +1,3 @@
-from view.frame_mod_art import FrameModArt
-
 class Controller:
     
     def __init__(self, view, modelArt, modelComp, modelCompArt):

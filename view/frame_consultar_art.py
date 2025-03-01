@@ -124,6 +124,8 @@ class FrameConArt(ttk.Frame):
         if lista:
             for i in lista:
                 self.tree.insert("", "end", values=(i.cod_articulo, i.nombre))
+        else:
+            messagebox("Error", "No se ha encontrado ningún artículo.")
 
 
     def set_controlador(self, controlador):
