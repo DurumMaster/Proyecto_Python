@@ -4,70 +4,85 @@ from tkinter import ttk
 
 class FrameConArt(ttk.Frame):
     def __init__(self, parent, lista=[]):
-        super().__init__(parent)
+        super().__init__(parent, style="Card.TFrame")
         self.lista = lista
         self.controlador = None
 
-        # Título
-        self.label_titulo = ttk.Label(self, text="BÚSQUEDA DE ARTÍCULOS", font=("Arial", 12, "bold"))
-        self.label_titulo.grid(row=0, column=0, columnspan=2, pady=5, sticky=W)
+        self.label_titulo = ttk.Label(self, text="")
+        self.label_titulo.grid(row=0, column=0, columnspan=2)
 
-        # Código
-        self.label_codigo = ttk.Label(self, text="Código:")
-        self.label_codigo.grid(row=1, column=0, sticky=W, padx=5, pady=2)
-        self.entry_codigo = ttk.Entry(self, width=20)
-        self.entry_codigo.grid(row=1, column=1, padx=5, pady=2, sticky=W)
+        self.label_titulo = ttk.Label(self, text="CONSULTA DE ARTÍCULOS", font=("Arial", 14, "bold"), foreground="#2C3E50")
+        self.label_titulo.grid(row=1, column=0, columnspan=2, pady=10)
 
-        # Nombre
-        self.label_nombre = ttk.Label(self, text="Nombre:")
-        self.label_nombre.grid(row=2, column=0, sticky=W, padx=5, pady=2)
-        self.entry_nombre = ttk.Entry(self, width=30)
-        self.entry_nombre.grid(row=2, column=1, padx=5, pady=2, sticky=W)
-
-        # Botón de búsqueda
-        self.btn_buscar = ttk.Button(self, text="BUSCAR", command=self.select)
-        self.btn_buscar.grid(row=3, column=1, pady=5, sticky=E)
-
-        # Frame para la tabla y scrollbar
-        self.frame_tabla = ttk.Frame(self)
-        self.frame_tabla.grid(row=4, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
-
-        # Scrollbar vertical
-        self.scroll_y = ttk.Scrollbar(self.frame_tabla, orient=VERTICAL)
+        self.frame_formulario = ttk.Frame(self, padding=10, style="InnerCard.TFrame")
+        self.frame_formulario.grid(row=2, column=0, columnspan=2, pady=10, padx=10, sticky=EW)
         
-        # Tabla (Treeview)
+        self.label_codigo = ttk.Label(self.frame_formulario, text="Código:")
+        self.label_codigo.grid(row=0, column=0, sticky=W, padx=5, pady=5)
+        self.entry_codigo = ttk.Entry(self.frame_formulario, width=50)
+        self.entry_codigo.grid(row=0, column=1, padx=5, pady=5, sticky=W)
+        
+        self.label_nombre = ttk.Label(self.frame_formulario, text="Nombre:")
+        self.label_nombre.grid(row=1, column=0, sticky=W, padx=5, pady=5)
+        self.entry_nombre = ttk.Entry(self.frame_formulario, width=50)
+        self.entry_nombre.grid(row=1, column=1, padx=5, pady=5, sticky=W)
+
+        self.btn_buscar = ttk.Button(self, text="🔍 BUSCAR", command=self.select, style="Accent.TButton")
+        self.btn_buscar.grid(row=3, column=0, columnspan=2, pady=10)
+
+        self.frame_tabla = ttk.Frame(self, padding=10, style="InnerCard.TFrame")
+        self.frame_tabla.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky=NSEW)
+        
+        self.scroll_y = ttk.Scrollbar(self.frame_tabla, orient=VERTICAL)
         self.tree = ttk.Treeview(
-            self.frame_tabla, 
-            columns=("Código", "Nombre"), 
+            self.frame_tabla,
+            columns=("Código", "Nombre"),
             selectmode="browse",
-            show="headings", 
-            height=5, 
+            show="headings",
+            height=7,
             yscrollcommand=self.scroll_y.set
         )
         self.scroll_y.config(command=self.tree.yview)
-        
-        self.tree.column("Código", width=100, anchor=CENTER)
-        self.tree.column("Nombre", width=200, anchor=W)
+
+        self.tree.column("Código", width=120, anchor=CENTER)
+        self.tree.column("Nombre", width=250, anchor=W)
         self.tree.heading("Código", text="CÓDIGO")
         self.tree.heading("Nombre", text="NOMBRE")
 
-        # Empaquetar elementos dentro del frame de la tabla
         self.tree.pack(side=LEFT, fill=BOTH, expand=True)
         self.scroll_y.pack(side=RIGHT, fill=Y)
 
-        # Botones de modificar y eliminar
+
         self.frame_botones = ttk.Frame(self)
-        self.frame_botones.grid(row=5, column=0, columnspan=2, pady=10)
-
-        self.btn_modificar = ttk.Button(self.frame_botones, text="MODIFICAR", command=self.modify)
-        self.btn_modificar.grid(row=0, column=0, padx=5)
-
-        self.btn_eliminar = ttk.Button(self.frame_botones, text="ELIMINAR", command=self.delete)
-        self.btn_eliminar.grid(row=0, column=1, padx=5)
-
-        # Ajustar tamaño de columnas
+        self.frame_botones.grid(row=5, column=0, columnspan=2, pady=15)
+        
+        self.btn_modificar = ttk.Button(self.frame_botones, text="✏️ MODIFICAR", command=self.modify, style="Modify.TButton")
+        self.btn_modificar.grid(row=0, column=0, padx=10)
+        
+        self.btn_eliminar = ttk.Button(self.frame_botones, text="🗑️ ELIMINAR", command=self.delete, style="Danger.TButton")
+        self.btn_eliminar.grid(row=0, column=1, padx=10)
+        
+        self.estilizar_widgets()
+        
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
+
+    def estilizar_widgets(self):
+        style = ttk.Style()
+        
+        style.configure("TFrame", background="#ECF0F1")
+        
+        style.configure("Card.TFrame", background="#FFFFFF", relief="raised", borderwidth=2)
+        style.configure("InnerCard.TFrame", background="#F8F9FA", relief="groove", borderwidth=1)
+        
+        style.configure("Accent.TButton", font=("Arial", 10, "bold"), foreground="#000000", background="#00FF00", padding=5)
+        style.map("Accent.TButton", background=[("active", "#229954")])
+
+        style.configure("Modify.TButton", font=("Arial", 10, "bold"), foreground="#000000", background="#FFA500", padding=5)
+        style.map("Modify.TButton", background=[("active", "#229954")])
+        
+        style.configure("Danger.TButton", font=("Arial", 10, "bold"), foreground="#000000", background="#FF0000", padding=5)
+        style.map("Danger.TButton", background=[("active", "#229954")])
 
     
     def modify(self):
